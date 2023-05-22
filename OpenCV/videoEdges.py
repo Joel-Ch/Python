@@ -24,43 +24,53 @@ def edges(image):
     return contours
 
 def dilateErode(frame):
+    img = frame.copy()
     # find eges
     imgGray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     imgBlur = cv.GaussianBlur(imgGray, (3,3), 0)
     imgEdges = cv.Canny(imgBlur, 50, 150)
-    cv.imshow('Edges', imgEdges)
     
     # dilate
     elementDilate = cv.getStructuringElement(cv.MORPH_ELLIPSE,(5,5))
     cv.dilate(imgEdges, elementDilate, imgEdges)
-    cv.imshow('dilated', imgEdges)
 
     # floodfill
     floodFilled = imgEdges.copy()
  
-    h, w = floodFilled.shape[:2]
-    mask = np.zeros((h+2, w+2), np.uint8)
+    h,w = floodFilled.shape
+    seed = (round(w/2),round(h/2))
 
-    cv.floodFill(imgEdges, mask, (round(w/2),round(h/2)), (0,0,0))
-    cv.imshow('floodfilled', floodFilled)
+    mask = np.zeros((h+2,w+2),np.uint8)
+
+    floodflags = 4
+    floodflags |= cv.FLOODFILL_MASK_ONLY
+    floodflags |= (255 << 8)
+
+    num,floodFilled,mask,rect = cv.floodFill(floodFilled, mask, seed, (255,0,0), (10,)*3, (10,)*3, floodflags)
+    shapeMask = mask[0:h, 0:w]
+
 
     # erode
     erosionElement = cv.getStructuringElement(cv.MORPH_ELLIPSE,(5,5))
-    cv.erode(floodFilled, erosionElement, floodFilled)
+    cv.erode(shapeMask, erosionElement, shapeMask)
     
-    cv.imshow('eroded', floodFilled)
+    cv.imshow('mask', shapeMask)
+    cv.bitwise_and(img, img, img, shapeMask)
+    cv.imshow('flood', img)
+    cv.bitwise_and(frame, frame, frame, shapeMask)
+    cv.imshow('flood2', frame)
+    
 
     # find contours
-    contours = cv.findContours(floodFilled, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    
-    # cv.drawContours(frame, contours, -1, (0,0,255))
+    contours, hierarchy = cv.findContours(shapeMask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+
     
     # # find largest contour
-    # maxContour = max(contours, key=cv.contourArea)
-    # cv.polylines(frame, maxContour, True, (0,255,0))
+    maxContour = max(contours, key=cv.contourArea)
+    cv.polylines(frame, maxContour, True, (0,255,0), 2, cv.LINE_8)
 
-    # cv.imshow('Contours', frame)
-    # return maxContour
+    cv.imshow('Contours', frame)
+    return maxContour
 
 while True:
     ret, frame = vid.read()
