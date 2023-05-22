@@ -10,4 +10,4 @@ for verse in range(1,total+1):
             print (i, "men, ")
         else:
             print ("1 man and his dog, spot")
-    print ("went to mow a meadow")
+    print ("went to mow a meadow",end="\n\n")
