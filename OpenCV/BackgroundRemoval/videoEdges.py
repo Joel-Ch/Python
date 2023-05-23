@@ -24,7 +24,6 @@ def edges(image):
     return contours
 
 def dilateErode(frame):
-    img = frame.copy()
     # find eges
     imgGray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     imgBlur = cv.GaussianBlur(imgGray, (3,3), 0)
@@ -33,6 +32,7 @@ def dilateErode(frame):
     # dilate
     elementDilate = cv.getStructuringElement(cv.MORPH_ELLIPSE,(5,5))
     cv.dilate(imgEdges, elementDilate, imgEdges)
+    cv.imshow('dilate', imgEdges)
 
     # floodfill
     floodFilled = imgEdges.copy()
@@ -46,31 +46,29 @@ def dilateErode(frame):
     floodflags |= cv.FLOODFILL_MASK_ONLY
     floodflags |= (255 << 8)
 
-    num,floodFilled,mask,rect = cv.floodFill(floodFilled, mask, seed, (255,0,0), (10,)*3, (10,)*3, floodflags)
+    num,floodFilled,mask,rect = cv.floodFill(floodFilled, mask, seed, (255,255,255), (10,)*3, (10,)*3, floodflags)
     shapeMask = mask[0:h, 0:w]
-
+    
 
     # erode
     erosionElement = cv.getStructuringElement(cv.MORPH_ELLIPSE,(5,5))
     cv.erode(shapeMask, erosionElement, shapeMask)
     
     cv.imshow('mask', shapeMask)
-    cv.bitwise_and(img, img, img, shapeMask)
-    cv.imshow('flood', img)
-    cv.bitwise_and(frame, frame, frame, shapeMask)
-    cv.imshow('flood2', frame)
+    cv.imshow('flood', frame)
     
 
     # find contours
     contours, hierarchy = cv.findContours(shapeMask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
-    
     # # find largest contour
-    maxContour = max(contours, key=cv.contourArea)
-    cv.polylines(frame, maxContour, True, (0,255,0), 2, cv.LINE_8)
-
-    cv.imshow('Contours', frame)
-    return maxContour
+    if contours:
+        maxContour = max(contours, key=cv.contourArea)
+        cv.polylines(frame, maxContour, True, (0,255,0), 2, cv.LINE_8)
+        cv.imshow('Contours', frame)
+        return maxContour
+    else:
+        return None
 
 while True:
     ret, frame = vid.read()
