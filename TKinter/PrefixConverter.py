@@ -15,7 +15,7 @@ def convert(value, prefix1, prefix2):
 
 # create window
 window=tk.Tk()
-window.title("OpenCV")
+window.title("Prefix Converter")
 window.resizable(False, False)
 
 # value
