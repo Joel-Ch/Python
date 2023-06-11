@@ -14,7 +14,6 @@ def clicked(r,c):
         states[r][c] = 'X'
         Player1='O'
 
-
     if Player1 == 'O' and states[r][c] == 0 and stop_game == False:
         b[r][c].configure(text = 'O')
         states[r][c] = "O"

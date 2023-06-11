@@ -55,8 +55,10 @@ def dilateErode(frame):
     cv.erode(shapeMask, erosionElement, shapeMask)
     
     cv.imshow('mask', shapeMask)
-    cv.imshow('flood', frame)
     
+    cv.bitwise_and(frame, frame, frame, shapeMask)
+    
+    cv.imshow('flood', frame)
 
     # find contours
     contours, hierarchy = cv.findContours(shapeMask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
