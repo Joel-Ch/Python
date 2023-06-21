@@ -7,8 +7,11 @@ def clicked(r,c):
     global Calculation
     global Output
     if (b[r][c] == "="):
-        Output = eval(Calculation)
-        OutputBox.config(text = Output)
+        try:
+            Output = eval(Calculation)
+            OutputBox.config(text = Output)
+        except:
+            pass
     elif (b[r][c] == "C"):
         Calculation = ""
         Output = ""
@@ -40,7 +43,5 @@ b = [
 for i in range(4):
     for j in range(4):   
         ttk.Button(text = (b[i][j]), command = lambda r = i, c = j : clicked(r,c)).grid(row = i+1, column = j)  
-
-
 
 root.mainloop()
