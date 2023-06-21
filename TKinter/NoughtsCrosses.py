@@ -14,7 +14,6 @@ def clicked(r,c):
         states[r][c] = 'X'
         Player1='O'
 
-
     if Player1 == 'O' and states[r][c] == 0 and stop_game == False:
         b[r][c].configure(text = 'O')
         states[r][c] = "O"
@@ -55,7 +54,7 @@ def check_if_win():
         elif states[0][0] and states[0][1] and states[0][2] and states[1][0] and states[1][1] and states[1][2] and states[2][0] and states[2][1] and states[2][2] != 0:
             stop_game = True
 
-            winner = messagebox.showinfo("tie", "Tie")
+            winner = messagebox.showinfo("Tie", "Tie")
 
             break
 
@@ -117,7 +116,7 @@ states = [
 # create button grid 
 for i in range(3):
     for j in range(3):
-                       
+
         b[i][j] = Button(
                         height = 4, width = 8,
                         font = ("Helvetica","20"),
