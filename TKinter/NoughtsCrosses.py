@@ -31,7 +31,7 @@ def check_if_win():
         if states[i][0] == states[i][1] == states[i][2] !=0: # check rows
             stop_game = True
 
-            winner = messagebox.showinfo("Winner", states[i][0] + " Won")
+            winner = messagebox.showinfo("Winner", states[i][0] + " Won!")
             break
 
         elif states [0][i] == states[1][i] == states[2][i] != 0: # check columns
