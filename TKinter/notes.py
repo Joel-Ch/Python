@@ -14,8 +14,25 @@ class Note:
         self.editButton.grid(row=index+1, column=1)
         self.deleteButton.grid(row=index+1, column=2)
 
+    
     def editNote(self):
-        print("Edit Note", self.index)
+        editWindow = Tk()
+        editWindow.title("Edit Note")
+
+        editLabel = ttk.Label(editWindow, text="Edit Note:")
+        editLabel.pack()
+
+        editEntry = ttk.Entry(editWindow)
+        editEntry.insert(0, self.text)
+        editEntry.pack()
+
+        saveButton = ttk.Button(editWindow, text="Save", command=lambda: self.saveEditedText(editEntry.get(), editWindow))
+        saveButton.pack()
+
+    def saveEditedText(self, newText, editWindow):
+        self.text = newText
+        self.label.config(text=newText)
+        editWindow.destroy()
         
 
     def deleteNote(self):
@@ -32,13 +49,18 @@ def addNote():
     rearrangeNotes()
     
     
-def delete_all_notes():
-    global notes
+def generateTextFile():
+    file = open("notes.txt", "w")
     for note in notes:
-        note.label.destroy()
-        note.editButton.destroy()
-        note.deleteButton.destroy()
-    notes = []
+        file.write(note.text + "\n")
+    file.close()
+
+def readFromTextFile():
+    file = open("notes.txt", "r")
+    for line in file:
+        new_note = Note(window, line.strip(), len(notes))
+        notes.append(new_note)
+    file.close()
     rearrangeNotes()
 
 def rearrangeNotes():
@@ -60,10 +82,16 @@ add_note = ttk.Button(
 ).grid(column=0, row=0)
 
 
-deleteAllNotes = ttk.Button(
+GenerateTextFile = ttk.Button(
     window,
-    text='Delete All Notes',
-    command=lambda: delete_all_notes()
+    text='Generate Text File',
+    command=lambda: generateTextFile()
+).grid(column=1, row=0)
+
+ReadFromTextFile = ttk.Button(
+    window,
+    text='Read From Text File',
+    command=lambda: readFromTextFile()
 ).grid(column=2, row=0)
 
 
