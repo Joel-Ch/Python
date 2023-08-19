@@ -48,7 +48,7 @@ def aiMove():
 # Design window
 root = Tk()
 # Title of the window            
-root.title("Othellow") 
+root.title("Othello") 
 root.resizable(0,0)
 player = ttk.Label(text=Player1+ "'s Turn", font=("Helvetica", 16))
 player.grid(row = 9, column = 0, columnspan=2)
