@@ -56,7 +56,7 @@ def dilateErode(frame):
     
     cv.imshow('mask', shapeMask)
     
-    cv.bitwise_and(frame, frame, frame, shapeMask)
+    frame = cv.bitwise_and(frame, frame, mask=shapeMask)
     
     cv.imshow('flood', frame)
 
